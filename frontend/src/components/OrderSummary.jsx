@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
 import { useCartStore } from "../stores/useCartStore";
 import { Link } from "react-router-dom";
-import { MoveRight } from "lucide-react";
+import { MoveRight, Loader } from "lucide-react";
 import axios from "../lib/axios";
+import { useState } from "react";
 
 const OrderSummary = () => {
   const { total, subtotal, coupon, isCouponApplied, cart } = useCartStore();
@@ -11,17 +12,21 @@ const OrderSummary = () => {
   const formattedSubtotal = subtotal.toFixed(2);
   const formattedTotal = total.toFixed(2);
   const formattedSavings = savings.toFixed(2);
+  const [loading, setLoading] = useState(false);
 
   const handlePayment = async () => {
     try {
+      setLoading(true);
       const res = await axios.post("/payments/create-checkout-session", {
         products: cart,
         couponCode: coupon ? coupon.code : null,
       });
+      setLoading(false);
 
       // redirect to Stripe Checkout page
       window.location.href = res.data.url;
     } catch (error) {
+      setLoading(false);
       console.error("Payment error:", error);
     }
   };
@@ -74,12 +79,19 @@ const OrderSummary = () => {
         </div>
 
         <motion.button
-          className="flex w-full items-center justify-center rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-300"
+          className={`flex w-full items-center justify-center rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white cursor-pointer hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-300 ${
+            loading ? "bg-gray-700 hover:bg-gray-700" : ""
+          }`}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={handlePayment}
+          disabled={loading === true}
         >
-          Proceed to Checkout
+          {loading ? (
+            <Loader className="animate-spin" />
+          ) : (
+            "Proceed to Checkout"
+          )}
         </motion.button>
 
         <div className="flex items-center justify-center gap-2">

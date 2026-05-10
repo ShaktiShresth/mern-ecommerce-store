@@ -20,7 +20,7 @@ const CartItem = ({ item }) => {
 							  focus:ring-emerald-500"
               onClick={() => updateQuantity(item._id, item.quantity - 1)}
             >
-              <Minus className="text-gray-300" />
+              <Minus className="text-gray-300 cursor-pointer" />
             </button>
             <p>{item.quantity}</p>
             <button
@@ -29,7 +29,7 @@ const CartItem = ({ item }) => {
 						focus:ring-2 focus:ring-emerald-500"
               onClick={() => updateQuantity(item._id, item.quantity + 1)}
             >
-              <Plus className="text-gray-300" />
+              <Plus className="text-gray-300 cursor-pointer" />
             </button>
           </div>
 
@@ -46,10 +46,10 @@ const CartItem = ({ item }) => {
           </p>
           <p className="text-sm text-gray-400">{item.description}</p>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 w-fit">
             <button
               className="inline-flex items-center text-sm font-medium text-red-400
-							 hover:text-red-300 hover:underline"
+							 hover:text-red-300 hover:underline cursor-pointer"
               onClick={() => removeFromCart(item._id)}
             >
               <Trash />
